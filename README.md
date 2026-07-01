@@ -4,8 +4,72 @@ URL du dépôt : <https://github.com/aydryun/EC06>
 
 ## 1. Workflow Git
 
-Décrire la stratégie de branches retenue et la justifier en 2-3 phrases.
-Expliquer comment la PR a été utilisée pendant l'épreuve.
+### Stratégie de prefixes
+
+Voici la liste des préfixes autorisés pour ce projet
+
+| prefix | Description                                            |
+|-------|--------------------------------------------------------|
+| feat  | Nouvelle fonctionnalité                                |
+| fix   | Correction de bugs applicatifs |
+| docs  | Changement dans la documentation                       |
+| ref   | Refactorisation du code / amélioration de performances |
+| style | Modification d'éléments stylistiques                   |
+| typo  | Modification de textes                                 |
+| test  | Ajout / modification de tests applicatifs              |
+| chore | Tâche de maintenance                                   |
+
+#### Format de commits
+
+- Tous les commits doivent utiliser un prefixe de la liste au dessus
+- le message doit être rédigé en français sans accents
+
+`(prefix): <description>`
+`chore: modification du workflow git`
+
+### Stratégie de branches
+
+| Branche                | Description                                                                |
+|------------------------|----------------------------------------------------------------------------|
+| <prefix>/<fonctionnalité>  | branche en cours développement, ajout de fonctionnalités modifications |
+| dev                    | branche développement, où les fonctionnalités sont implémentées            |
+| main                   | Branche principale, push directs interdits                                 |
+
+Chaque branche doit réutiliser un préfixe de la liste des préfixes autorisés
+accompagné de la fonctionnalité / son but
+
+Ex:
+`docs/conventions` : Branche visant à ajouter la documentation concernant les conventions de code
+
+### Pull request
+
+Chaque demande de pull request doit suivre ce format de message
+
+```md
+<Description>
+
+# Type de PR
+- element 1
+- element n 
+
+....
+
+
+lexique (optionnel)
+
+```
+
+Ex:
+
+```md
+Cette pull request vise à ajouter les conventions de code du projet
+
+# docs
+- ajout de conventions.md
+- modification des personas 
+- mise à jour de la documentation de workflow
+
+```
 
 ## 2. Conteneurisation Docker
 
