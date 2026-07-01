@@ -73,25 +73,46 @@ Cette pull request vise à ajouter les conventions de code du projet
 
 ## 2. Conteneurisation Docker
 
-Décrire le Dockerfile multistage : image de base choisie, pourquoi un
-utilisateur non-root, ce que fait le HEALTHCHECK.
+La Conteneurisation se fait avec le docker compose qui prend en compte le `Dockerfile`
+Dans le workflow lintest une conteneurisation a lieu pour exectuer les commandes de lint et de test
+ce qui permet aux commandes d'etre lancé dans l'environement directement
 
 ## 3. Pipeline CI/CD
 
-Insérer ici le schéma Mermaid représentant les trois jobs et leurs
-déclencheurs.
-Décrire en quelques phrases le rôle de chaque job et ce qui déclenche
-le job deploy uniquement sur main.
+```mermaid
+flowchart LR
+    A[feat/*] -- "Pull Request" --> B[dev]
+    B -- "Pull Request" --> C[main]
+    
+    B -. "lint_test.yml" .-> D
+    C -. "lint_test.yml" .-> D[Lint & Tests]
+    C -. "build-artifact.yml" .-> E[Upload artifact<br>build/deploy.log]
+    C -. "publish.yml" .-> F[Build & Push<br>ghcr.io]
+```
+
+Le graphique represente la pipline de deploiement ci
+
+Le build artifact marche corretement, le lien peut etre trouver en accedant aux log d'un des workflow de publications
+<https://github.com/aydryun/EC06/actions/workflows/build-artifact.yml>, une execution choisis il faut se rendre à l'étape
+Upload de l'articat, et dans la derniere ligne de cette etape il y a le lien de telechargement !
 
 ## 4. Gestion des secrets
 
-Lister les secrets utilisés (noms uniquement, pas les valeurs).
-Expliquer où ils sont définis et comment ils sont injectés dans la CI.
-Confirmer explicitement que .env n'est pas versionné et comment on
-l'a vérifié.
+Les secrets sont definis dans l'enveironement github est sont utiliser dans la partie lint_test
+permettant de faire les healthchecka de la ligne 42 à 43 du fichier de workflow.
 
 ## 5. Lancement et utilisation du projet
 
-Donner les commandes nécessaires pour cloner le dépôt et lancer le
-projet en local, de façon à ce qu'un tiers puisse reproduire l'exécution
-sans aide supplémentaire :
+```bash
+git clone https://github.com/aydryun/EC06
+cd EC06
+
+cp .env.dist .env
+#remplir les valeurs par des valeurs personnels
+
+docker compose up -d 
+
+#Se rendre sur localhost:3000 pour voir l'api
+
+
+```
