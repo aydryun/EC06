@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Copier le fichier d'environnement
         run: cp .env.dist .env
@@ -63,5 +63,11 @@ jobs:
         if: ${{ github.event_name != 'pull_request' }}
         env:
           TAGS: ${{ steps.meta.outputs.tags }}
-          DIGEST: ${{ steps.build-and-push.outputs.digest }}
-        run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
+        run: |
+          FIRST_TAG=$(echo "${TAGS}" | head -1)
+          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' "${FIRST_TAG}" 2>/dev/null | cut -d'@' -f2)
+          if [ -z "${DIGEST}" ]; then
+            echo "No digest found, skipping cosign sign"
+            exit 0
+          fi
+          echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
